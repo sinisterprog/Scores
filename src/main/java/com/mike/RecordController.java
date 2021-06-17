@@ -4,6 +4,8 @@ import com.mike.DTOs.Record;
 import com.mike.DTOs.Request;
 import com.mike.repo.RecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,6 +19,9 @@ import java.util.List;
 
 @RestController
 public class RecordController {
+
+    //Change at will
+    private static final int pageSize=20;
 
     @Autowired
     private RecordRepository repository;
@@ -43,8 +48,9 @@ public class RecordController {
 
     // Find by name
     @GetMapping("/scores/{name}")
-    List<Record> findByName(@PathVariable String name) {
-        return repository.getScoresByPlayer(name);
+    List<Record> findByName(@PathVariable String name, @RequestParam(value = "page", defaultValue="0") int page) {
+        Pageable pageable = PageRequest.of(Integer.valueOf(page), pageSize);
+        return repository.getScoresByPlayer(name, pageable);
     }
 
     // Save or update

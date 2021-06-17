@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 @Entity
 public class Record {
@@ -14,7 +15,10 @@ public class Record {
     private String player;
     private int score;
     private Timestamp scoreDate;
-
+    private static transient final SimpleDateFormat formatter;
+    static {
+        formatter = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+    }
     public Record() {
     }
 
@@ -55,7 +59,7 @@ public class Record {
     }
 
     public String getScoreDate() {
-        return scoreDate.toString();
+         return formatter.format(scoreDate);
     }
 
 }

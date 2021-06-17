@@ -20,7 +20,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient(timeout = "1000")
 class HistoryControllerTest {
-    @MockBean
+    @Autowired
     private RecordRepository repository;
 
     @Autowired
@@ -34,23 +34,17 @@ class HistoryControllerTest {
         testList.add(new Record("Santideva", 0,"1982-05-20 14:20:40"));
         testList.add(new Record("Santideva", 30,"1982-05-20 14:20:30"));
         testList.add(new Record("Santideva", 20,"1984-05-20 14:20:30"));
-
-
-        Mockito.when(repository.getScoresByPlayer(anyString(), anyObject())).thenReturn(testList);
-
+        repository.saveAll(testList);
         testWebClient.get()
                 .uri("/history/Santideva")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
-//                .consumeWith(System.out::println);
                 .jsonPath("average").isEqualTo(15.0)
                 .jsonPath("allScores.length()").isEqualTo(4)
-                .jsonPath("highScore").value(System.out::println);
-                //.jsonPath("highScores[0]").value(System.out::println);
+                .jsonPath("highScore").isEqualTo(30)
+                .jsonPath("highScoreDate").isEqualTo("1982-05-20 14:20:30")
+                .jsonPath("lowScore").isEqualTo(0)
+                .jsonPath("lowScoreDate").isEqualTo("1982-05-20 14:20:40");
         };
-
-//                .jsonPath("allscores.highScores[0].scoreDate)").isEqualTo("1982-05-20 14:20:30")
-//                .jsonPath("lowScores[0].score)").isEqualTo(0)
-//                .jsonPath("lowScores[0].score)").isEqualTo("1982-05-20 14:20:40");
     }

@@ -26,8 +26,8 @@ public class HistoryController {
             return new History();
         }
 
-        Record highScore = allRecords.get(0);
-        Record lowScore = allRecords.get(allRecords.size() - 1);
+        Record lowScore = allRecords.get(0);
+        Record highScore = allRecords.get(allRecords.size() - 1);
         double avg = allRecords.stream().mapToInt(r -> r.getScore()).average().orElse(0);
         return new History(allRecords, highScore.getScore(), lowScore.getScore(), highScore.getScoreDate(), lowScore.getScoreDate(), avg);
     }
